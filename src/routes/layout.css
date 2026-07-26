@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap');
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+
+:root {
+	--bg: #f4f7f5;
+	--surface: #ffffff;
+	--ink: #1a2e24;
+	--muted: #5c6f64;
+	--accent: #2d6a4f;
+	--accent-hover: #1b4332;
+	--border: #d8e3dc;
+	--warn: #bc6c25;
+}
+
+body {
+	font-family: 'DM Sans', system-ui, sans-serif;
+	background: radial-gradient(ellipse at top, #e8f3ec 0%, var(--bg) 55%);
+	color: var(--ink);
+	min-height: 100dvh;
+}
+
+h1,
+h2,
+.brand {
+	font-family: 'Instrument Serif', Georgia, serif;
+	font-weight: 400;
+}
