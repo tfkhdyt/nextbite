@@ -1,6 +1,7 @@
 import type { Handle } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
 import { SESSION_SECRET } from '$env/static/private';
+import { enforceRateLimit } from '$lib/server/rateLimit';
 import {
 	COOKIE_NAME,
 	SESSION_MAX_AGE,
@@ -11,11 +12,19 @@ import {
 const protectedPrefixes = ['/dashboard', '/logs', '/foods'];
 
 export const handle: Handle = async ({ event, resolve }) => {
+	const { pathname } = event.url;
+	const isLoginPost = pathname === '/login' && event.request.method === 'POST';
+
+	if (isLoginPost) {
+		await enforceRateLimit(event, 'LOGIN_RATE_LIMITER');
+	} else {
+		await enforceRateLimit(event, 'APP_RATE_LIMITER');
+	}
+
 	const token = event.cookies.get(COOKIE_NAME);
 	const authenticated = token ? await verifySessionToken(token, SESSION_SECRET) : false;
 	event.locals.authenticated = authenticated;
 
-	const { pathname } = event.url;
 	const isProtected = protectedPrefixes.some(
 		(prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
 	);

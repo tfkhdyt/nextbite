@@ -8,6 +8,7 @@ Personal meal tracker for logging what you eat, browsing food history, and getti
 - **Foods**: list of tracked foods sorted by eat count (least first), with last-eaten time
 - **Dashboard**: totals, recent logs, meals-per-day chart, top foods, and least-eaten recommendation (after ~30 days of history)
 - **Auth**: single shared password behind an HTTP-only session cookie
+- **Rate limiting**: Cloudflare Workers bindings (login 5/min, app 120/min per IP in production)
 
 ## Stack
 
