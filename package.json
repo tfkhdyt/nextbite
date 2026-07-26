@@ -13,7 +13,8 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"gen": "wrangler types",
-		"convex:dev": "convex dev"
+		"convex:dev": "convex dev",
+		"deploy": "convex deploy --cmd 'pnpm build' --cmd-url-env-var-name PUBLIC_CONVEX_URL"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",

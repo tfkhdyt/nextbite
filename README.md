@@ -55,16 +55,17 @@ Open [http://localhost:5173](http://localhost:5173) and sign in with `APP_PASSWO
 
 ## Scripts
 
-| Command           | Description                                 |
-| ----------------- | ------------------------------------------- |
-| `pnpm dev`        | Vite / SvelteKit dev server                 |
-| `pnpm convex:dev` | Convex backend watcher                      |
-| `pnpm build`      | Production build for Cloudflare Workers     |
-| `pnpm preview`    | Preview the Workers build locally           |
-| `pnpm check`      | Typecheck (`svelte-check` + Wrangler types) |
-| `pnpm lint`       | Prettier + ESLint                           |
-| `pnpm format`     | Format with Prettier                        |
-| `pnpm gen`        | Generate Wrangler / Worker types            |
+| Command           | Description                                            |
+| ----------------- | ------------------------------------------------------ |
+| `pnpm dev`        | Vite / SvelteKit dev server                            |
+| `pnpm convex:dev` | Convex backend watcher                                 |
+| `pnpm build`      | Production build for Cloudflare Workers                |
+| `pnpm preview`    | Preview the Workers build locally                      |
+| `pnpm check`      | Typecheck (`svelte-check` + Wrangler types)            |
+| `pnpm lint`       | Prettier + ESLint                                      |
+| `pnpm format`     | Format with Prettier                                   |
+| `pnpm gen`        | Generate Wrangler / Worker types                       |
+| `pnpm deploy`     | Deploy Convex + build (then `wrangler deploy` locally) |
 
 ## Project layout
 
@@ -76,12 +77,26 @@ convex/           # Schema and Convex queries/mutations
 
 ## Deploy
 
-1. Deploy the Convex backend: `npx convex deploy`
-2. Set production env vars (`APP_PASSWORD`, `SESSION_SECRET`, `ORIGIN`, `PUBLIC_CONVEX_URL`) on Cloudflare
-3. Build and deploy the Worker:
+### CI (GitHub Actions)
+
+Pushes to `main` (and manual runs via **Actions → Deploy → Run workflow**) deploy Convex, build the app, and deploy to Cloudflare.
+
+Add these repository secrets (**Settings → Secrets and variables → Actions**):
+
+| Secret                  | Source                                                             |
+| ----------------------- | ------------------------------------------------------------------ |
+| `CONVEX_DEPLOY_KEY`     | Convex dashboard → production deployment → Deploy keys             |
+| `CLOUDFLARE_API_TOKEN`  | Cloudflare → Account API tokens → Edit Cloudflare Workers template |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare dashboard account ID                                    |
+| `APP_PASSWORD`          | Shared login password for production                               |
+| `SESSION_SECRET`        | Long random string for session cookies                             |
+
+`APP_PASSWORD` and `SESSION_SECRET` must be GitHub secrets because they are baked in at build time via `$env/static/private`.
+
+### Manual
 
 ```sh
-pnpm build
+pnpm deploy
 npx wrangler deploy
 ```
 
