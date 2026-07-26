@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { useQuery } from 'convex-svelte';
 	import { api } from '../../../convex/_generated/api.js';
 	import { formatDateTime } from '$lib/format';
@@ -18,13 +19,16 @@
 {:else if foods.error}
 	<p class="text-red-600">{foods.error.toString()}</p>
 {:else if foods.data && foods.data.length > 0}
-	<ul class="divide-y divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--surface)]">
+	<ul
+		class="divide-y divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--surface)]"
+	>
 		{#each foods.data as food (food._id)}
 			<li class="px-4 py-3">
 				<div class="flex items-baseline justify-between gap-4">
 					<span class="font-medium">{food.name}</span>
 					<span class="shrink-0 text-sm text-[var(--muted)]">
-						{food.eatCount} {food.eatCount === 1 ? 'time' : 'times'}
+						{food.eatCount}
+						{food.eatCount === 1 ? 'time' : 'times'}
 					</span>
 				</div>
 				<p class="mt-0.5 text-sm text-[var(--muted)]">
@@ -34,5 +38,8 @@
 		{/each}
 	</ul>
 {:else}
-	<p class="text-[var(--muted)]">No foods yet. <a href="/logs" class="text-[var(--accent)] underline">Log a meal</a> to get started.</p>
+	<p class="text-[var(--muted)]">
+		No foods yet.
+		<a href={resolve('/logs')} class="text-[var(--accent)] underline">Log a meal</a> to get started.
+	</p>
 {/if}

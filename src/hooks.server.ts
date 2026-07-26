@@ -1,7 +1,12 @@
 import type { Handle } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
 import { SESSION_SECRET } from '$env/static/private';
-import { COOKIE_NAME, SESSION_MAX_AGE, createSessionToken, verifySessionToken } from '$lib/server/session';
+import {
+	COOKIE_NAME,
+	SESSION_MAX_AGE,
+	createSessionToken,
+	verifySessionToken
+} from '$lib/server/session';
 
 const protectedPrefixes = ['/dashboard', '/logs', '/foods'];
 

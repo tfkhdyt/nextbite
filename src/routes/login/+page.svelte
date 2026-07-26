@@ -16,7 +16,9 @@
 
 	<form method="POST" use:enhance class="space-y-4">
 		<div>
-			<label for="password" class="mb-1 block text-sm font-medium text-[var(--muted)]">Password</label>
+			<label for="password" class="mb-1 block text-sm font-medium text-[var(--muted)]"
+				>Password</label
+			>
 			<input
 				id="password"
 				name="password"

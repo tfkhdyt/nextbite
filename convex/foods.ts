@@ -45,8 +45,7 @@ export const withStats = query({
 					.withIndex('by_food_id', (q) => q.eq('foodId', food._id))
 					.collect();
 				const eatCount = logs.length;
-				const lastEatenAt =
-					eatCount > 0 ? Math.max(...logs.map((log) => log.eatenAt)) : null;
+				const lastEatenAt = eatCount > 0 ? Math.max(...logs.map((log) => log.eatenAt)) : null;
 				return { ...food, eatCount, lastEatenAt };
 			})
 		);
@@ -74,8 +73,7 @@ export const recommendLeastEaten = query({
 					.withIndex('by_food_id', (q) => q.eq('foodId', food._id))
 					.collect();
 				const eatCount = logs.length;
-				const lastEatenAt =
-					eatCount > 0 ? Math.max(...logs.map((log) => log.eatenAt)) : null;
+				const lastEatenAt = eatCount > 0 ? Math.max(...logs.map((log) => log.eatenAt)) : null;
 				return { food, eatCount, lastEatenAt };
 			})
 		);

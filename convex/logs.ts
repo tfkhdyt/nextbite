@@ -30,11 +30,7 @@ async function upsertFood(ctx: MutationCtx, name: string) {
 export const list = query({
 	args: { limit: v.optional(v.number()) },
 	handler: async (ctx, { limit = 50 }) => {
-		const logs = await ctx.db
-			.query('logs')
-			.withIndex('by_eaten_at')
-			.order('desc')
-			.take(limit);
+		const logs = await ctx.db.query('logs').withIndex('by_eaten_at').order('desc').take(limit);
 
 		return await Promise.all(
 			logs.map(async (log) => {

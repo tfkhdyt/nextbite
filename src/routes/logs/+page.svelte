@@ -50,7 +50,10 @@
 
 <h1 class="mb-6 text-3xl sm:text-4xl">Logs</h1>
 
-<form onsubmit={addLog} class="mb-8 space-y-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
+<form
+	onsubmit={addLog}
+	class="mb-8 space-y-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5"
+>
 	<div>
 		<label for="food" class="mb-1 block text-sm font-medium text-[var(--muted)]">Food</label>
 		<input
@@ -72,7 +75,9 @@
 		/>
 	</div>
 	<div>
-		<label for="note" class="mb-1 block text-sm font-medium text-[var(--muted)]">Note (optional)</label>
+		<label for="note" class="mb-1 block text-sm font-medium text-[var(--muted)]"
+			>Note (optional)</label
+		>
 		<input
 			id="note"
 			bind:value={note}
@@ -101,7 +106,9 @@
 	{:else if logs.error}
 		<p class="text-red-600">{logs.error.toString()}</p>
 	{:else if logs.data && logs.data.length > 0}
-		<ul class="divide-y divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--surface)]">
+		<ul
+			class="divide-y divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--surface)]"
+		>
 			{#each logs.data as log (log._id)}
 				<li class="flex items-start justify-between gap-4 px-4 py-3">
 					<div>

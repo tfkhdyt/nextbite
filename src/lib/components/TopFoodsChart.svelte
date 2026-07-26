@@ -17,26 +17,16 @@
 {#if !hasFoods}
 	<p class="text-sm text-[var(--muted)]">Log meals to see rankings.</p>
 {:else}
-	<svg
-		viewBox="0 0 {width} {height}"
-		class="w-full"
-		role="img"
-		aria-label="Top foods by eat count"
-	>
+	<svg viewBox="0 0 {width} {height}" class="w-full" role="img" aria-label="Top foods by eat count">
 		{#each foods as food, i (food.name)}
 			{@const barW = (food.eatCount / maxCount) * barMaxW}
 			{@const y = i * rowH + 6}
-			<text
-				x="0"
-				y={y + 12}
-				class="fill-[var(--ink)] text-[11px]"
-				dominant-baseline="middle"
-			>
+			<text x="0" y={y + 12} class="fill-[var(--ink)] text-[11px]" dominant-baseline="middle">
 				{food.name.length > 14 ? food.name.slice(0, 13) + '…' : food.name}
 			</text>
 			<rect
 				x={labelW}
-				y={y}
+				{y}
 				width={barW}
 				height={16}
 				rx="3"

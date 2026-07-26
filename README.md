@@ -32,11 +32,11 @@ cp .env.example .env
 
 Fill in `.env`:
 
-| Variable | Description |
-| --- | --- |
-| `ORIGIN` | App origin URL (e.g. `http://localhost:5173`) |
-| `APP_PASSWORD` | Shared login password |
-| `SESSION_SECRET` | Long random string used to sign session cookies |
+| Variable            | Description                                             |
+| ------------------- | ------------------------------------------------------- |
+| `ORIGIN`            | App origin URL (e.g. `http://localhost:5173`)           |
+| `APP_PASSWORD`      | Shared login password                                   |
+| `SESSION_SECRET`    | Long random string used to sign session cookies         |
 | `PUBLIC_CONVEX_URL` | Convex deployment URL (set by `convex dev` / dashboard) |
 
 Start Convex (creates/links a deployment and syncs `PUBLIC_CONVEX_URL` into `.env.local` when configured):
@@ -55,16 +55,16 @@ Open [http://localhost:5173](http://localhost:5173) and sign in with `APP_PASSWO
 
 ## Scripts
 
-| Command | Description |
-| --- | --- |
-| `pnpm dev` | Vite / SvelteKit dev server |
-| `pnpm convex:dev` | Convex backend watcher |
-| `pnpm build` | Production build for Cloudflare Workers |
-| `pnpm preview` | Preview the Workers build locally |
-| `pnpm check` | Typecheck (`svelte-check` + Wrangler types) |
-| `pnpm lint` | Prettier + ESLint |
-| `pnpm format` | Format with Prettier |
-| `pnpm gen` | Generate Wrangler / Worker types |
+| Command           | Description                                 |
+| ----------------- | ------------------------------------------- |
+| `pnpm dev`        | Vite / SvelteKit dev server                 |
+| `pnpm convex:dev` | Convex backend watcher                      |
+| `pnpm build`      | Production build for Cloudflare Workers     |
+| `pnpm preview`    | Preview the Workers build locally           |
+| `pnpm check`      | Typecheck (`svelte-check` + Wrangler types) |
+| `pnpm lint`       | Prettier + ESLint                           |
+| `pnpm format`     | Format with Prettier                        |
+| `pnpm gen`        | Generate Wrangler / Worker types            |
 
 ## Project layout
 

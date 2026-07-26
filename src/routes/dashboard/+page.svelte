@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { useConvexClient, useQuery } from 'convex-svelte';
 	import { api } from '../../../convex/_generated/api.js';
 	import { formatDateTime, formatRelative } from '$lib/format';
@@ -152,16 +153,23 @@
 		{:else if recentLogs.error}
 			<p class="text-red-600">{recentLogs.error.toString()}</p>
 		{:else if recentLogs.data && recentLogs.data.length > 0}
-			<ul class="divide-y divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--surface)]">
+			<ul
+				class="divide-y divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--surface)]"
+			>
 				{#each recentLogs.data as log (log._id)}
-					<li class="flex flex-col gap-0.5 px-4 py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+					<li
+						class="flex flex-col gap-0.5 px-4 py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
+					>
 						<span class="font-medium">{log.foodName}</span>
 						<span class="text-sm text-[var(--muted)]">{formatDateTime(log.eatenAt)}</span>
 					</li>
 				{/each}
 			</ul>
 		{:else}
-			<p class="text-[var(--muted)]">No meals logged yet. <a href="/logs" class="text-[var(--accent)] underline">Add one</a>.</p>
+			<p class="text-[var(--muted)]">
+				No meals logged yet.
+				<a href={resolve('/logs')} class="text-[var(--accent)] underline">Add one</a>.
+			</p>
 		{/if}
 	</section>
 {/if}
