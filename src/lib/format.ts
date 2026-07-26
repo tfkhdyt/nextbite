@@ -1,3 +1,17 @@
+export type MealType = 'breakfast' | 'lunch' | 'dinner';
+
+/** Local-hour buckets: breakfast <11, lunch 11–15, dinner 16+. */
+export function mealTypeFromEatenAt(timestamp: number): MealType {
+	const hour = new Date(timestamp).getHours();
+	if (hour < 11) return 'breakfast';
+	if (hour < 16) return 'lunch';
+	return 'dinner';
+}
+
+export function mealTypeClass(type: MealType): string {
+	return `meal-${type}`;
+}
+
 export function formatDateTime(timestamp: number | null): string {
 	if (timestamp == null) return 'Never';
 	return new Intl.DateTimeFormat(undefined, {

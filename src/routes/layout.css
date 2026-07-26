@@ -11,6 +11,21 @@
 	--accent-hover: #1b4332;
 	--border: #d8e3dc;
 	--warn: #bc6c25;
+	--meal-breakfast: #b7791f;
+	--meal-lunch: #2d6a4f;
+	--meal-dinner: #2c5282;
+}
+
+.meal-breakfast {
+	color: var(--meal-breakfast);
+}
+
+.meal-lunch {
+	color: var(--meal-lunch);
+}
+
+.meal-dinner {
+	color: var(--meal-dinner);
 }
 
 body {

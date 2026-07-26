@@ -11,3 +11,6 @@ bun.lockb
 
 # Convex
 convex/_generated/
+
+# Cloudflare
+worker-configuration.d.ts

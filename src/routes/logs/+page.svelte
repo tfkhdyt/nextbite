@@ -2,7 +2,7 @@
 	import { useConvexClient, useQuery } from 'convex-svelte';
 	import { api } from '../../../convex/_generated/api.js';
 	import type { Id } from '../../../convex/_generated/dataModel';
-	import { formatDateTime } from '$lib/format';
+	import { formatDateTime, mealTypeClass, mealTypeFromEatenAt } from '$lib/format';
 
 	const client = useConvexClient();
 	const logs = useQuery(api.logs.list, () => ({ limit: 100 }));
@@ -113,7 +113,9 @@
 				<li class="flex items-start justify-between gap-4 px-4 py-3">
 					<div>
 						<p class="font-medium">{log.foodName}</p>
-						<p class="text-sm text-[var(--muted)]">{formatDateTime(log.eatenAt)}</p>
+						<p class="text-sm {mealTypeClass(mealTypeFromEatenAt(log.eatenAt))}">
+							{formatDateTime(log.eatenAt)}
+						</p>
 						{#if log.note}
 							<p class="mt-0.5 text-sm text-[var(--muted)]">{log.note}</p>
 						{/if}
