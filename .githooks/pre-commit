@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+set -e
+
+pnpm format
+git update-index --again
+pnpm lint
+pnpm check
