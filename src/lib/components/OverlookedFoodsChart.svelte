@@ -1,21 +1,25 @@
 <script lang="ts">
 	import { BarChart, Tooltip, defaultChartPadding } from 'layerchart';
 
-	type FoodStat = { name: string; eatCount: number };
+	type OverlookedFood = { name: string; daysSince: number };
 
-	let { foods }: { foods: FoodStat[] } = $props();
+	let { foods }: { foods: OverlookedFood[] } = $props();
 
 	const hasFoods = $derived(foods.length > 0);
 	const height = $derived(Math.max(foods.length, 1) * 32);
+
+	function daysLabel(value: number) {
+		return `${Math.round(value)}d`;
+	}
 </script>
 
 {#if !hasFoods}
-	<p class="text-sm text-[var(--muted)]">Log meals to see rankings.</p>
+	<p class="text-sm text-[var(--muted)]">Log meals to see overlooked foods.</p>
 {:else}
-	<div role="img" aria-label="Top foods by eat count">
+	<div role="img" aria-label="Foods longest since last eaten">
 		<BarChart
 			data={foods}
-			x="eatCount"
+			x="daysSince"
 			y="name"
 			xDomain={[0, null]}
 			orientation="horizontal"
@@ -25,14 +29,14 @@
 			bandPadding={0.35}
 			labels={{
 				placement: 'outside',
-				format: 'integer',
+				format: daysLabel,
 				offset: 6,
 				class: 'fill-[var(--muted)] text-[10px]'
 			}}
 			series={[
 				{
-					key: 'eatCount',
-					value: 'eatCount',
+					key: 'daysSince',
+					value: 'daysSince',
 					color: 'var(--accent)',
 					props: { radius: 3, rounded: 'edge', strokeWidth: 0, fillOpacity: 0.85 }
 				}
@@ -60,9 +64,10 @@
 						<Tooltip.Header>{data.name}</Tooltip.Header>
 						<Tooltip.List>
 							<Tooltip.Item
-								label="Logged"
-								value={data.eatCount}
-								format={(v) => `${Math.round(Number(v))} ${Number(v) === 1 ? 'time' : 'times'}`}
+								label="Last eaten"
+								value={data.daysSince}
+								format={(v) =>
+									`${Math.round(Number(v))} ${Number(v) === 1 ? 'day ago' : 'days ago'}`}
 							/>
 						</Tooltip.List>
 					{/snippet}

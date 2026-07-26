@@ -2,6 +2,7 @@
 	import { useConvexClient, useQuery } from 'convex-svelte';
 	import { api } from '../../../convex/_generated/api.js';
 	import type { Id } from '../../../convex/_generated/dataModel';
+	import MealTypeIcon from '$lib/components/MealTypeIcon.svelte';
 	import { formatDateTime, mealTypeClass, mealTypeFromEatenAt } from '$lib/format';
 
 	const client = useConvexClient();
@@ -110,10 +111,12 @@
 			class="divide-y divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--surface)]"
 		>
 			{#each logs.data as log (log._id)}
+				{@const meal = mealTypeFromEatenAt(log.eatenAt)}
 				<li class="flex items-start justify-between gap-4 px-4 py-3">
 					<div>
 						<p class="font-medium">{log.foodName}</p>
-						<p class="text-sm {mealTypeClass(mealTypeFromEatenAt(log.eatenAt))}">
+						<p class="inline-flex items-center gap-1.5 text-sm {mealTypeClass(meal)}">
+							<MealTypeIcon type={meal} />
 							{formatDateTime(log.eatenAt)}
 						</p>
 						{#if log.note}

@@ -2,8 +2,10 @@
 	import { resolve } from '$app/paths';
 	import { useConvexClient, useQuery } from 'convex-svelte';
 	import { api } from '../../../convex/_generated/api.js';
-	import { formatDateTime, formatRelative } from '$lib/format';
-	import MealsPerDayChart from '$lib/components/MealsPerDayChart.svelte';
+	import { formatDateTime, formatRelative, mealTypeClass, mealTypeFromEatenAt } from '$lib/format';
+	import EatTimeChart from '$lib/components/EatTimeChart.svelte';
+	import MealTypeIcon from '$lib/components/MealTypeIcon.svelte';
+	import OverlookedFoodsChart from '$lib/components/OverlookedFoodsChart.svelte';
 	import TopFoodsChart from '$lib/components/TopFoodsChart.svelte';
 
 	const client = useConvexClient();
@@ -13,11 +15,7 @@
 	const foods = useQuery(api.foods.withStats, () => ({}));
 	const recentLogs = useQuery(api.logs.list, () => ({ limit: 5 }));
 	const history = useQuery(api.logs.historySummary, () => ({ now: pageLoadedAt }));
-	const dailyCounts = useQuery(api.logs.dailyCounts, () => ({
-		days: 14,
-		now: pageLoadedAt,
-		timezoneOffsetMinutes
-	}));
+	const eatTimes = useQuery(api.logs.eatTimeDistribution, () => ({ timezoneOffsetMinutes }));
 
 	let showRecommend = $state(false);
 	let recommending = $state(false);
@@ -40,6 +38,16 @@
 			.sort((a, b) => b.eatCount - a.eatCount || a.name.localeCompare(b.name))
 			.slice(0, 5)
 			.map((food) => ({ name: food.name, eatCount: food.eatCount }))
+	);
+	const overlookedFoods = $derived(
+		(foods.data ?? [])
+			.flatMap((food) => {
+				if (food.lastEatenAt == null) return [];
+				const daysSince = Math.floor((pageLoadedAt - food.lastEatenAt) / (1000 * 60 * 60 * 24));
+				return daysSince > 0 ? [{ name: food.name, daysSince }] : [];
+			})
+			.sort((a, b) => b.daysSince - a.daysSince || a.name.localeCompare(b.name))
+			.slice(0, 5)
 	);
 
 	async function onRecommend() {
@@ -82,14 +90,8 @@
 
 	<div class="mb-8 grid gap-4 sm:grid-cols-2">
 		<section class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
-			<h2 class="mb-4 text-xl">Meals last 14 days</h2>
-			{#if dailyCounts.isLoading}
-				<p class="text-sm text-[var(--muted)]">Loading...</p>
-			{:else if dailyCounts.error}
-				<p class="text-sm text-red-600">{dailyCounts.error.toString()}</p>
-			{:else if dailyCounts.data}
-				<MealsPerDayChart data={dailyCounts.data} />
-			{/if}
+			<h2 class="mb-4 text-xl">Overlooked foods</h2>
+			<OverlookedFoodsChart foods={overlookedFoods} />
 		</section>
 
 		<section class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
@@ -97,6 +99,17 @@
 			<TopFoodsChart foods={topFoods} />
 		</section>
 	</div>
+
+	<section class="mb-8 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
+		<h2 class="mb-4 text-xl">Eat time</h2>
+		{#if eatTimes.isLoading}
+			<p class="text-sm text-[var(--muted)]">Loading...</p>
+		{:else if eatTimes.error}
+			<p class="text-sm text-red-600">{eatTimes.error.toString()}</p>
+		{:else if eatTimes.data}
+			<EatTimeChart data={eatTimes.data} />
+		{/if}
+	</section>
 
 	{#if hasEnoughHistory}
 		<section class="mb-8">
@@ -157,11 +170,15 @@
 				class="divide-y divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--surface)]"
 			>
 				{#each recentLogs.data as log (log._id)}
+					{@const meal = mealTypeFromEatenAt(log.eatenAt)}
 					<li
 						class="flex flex-col gap-0.5 px-4 py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
 					>
 						<span class="font-medium">{log.foodName}</span>
-						<span class="text-sm text-[var(--muted)]">{formatDateTime(log.eatenAt)}</span>
+						<span class="inline-flex items-center gap-1.5 text-sm {mealTypeClass(meal)}">
+							<MealTypeIcon type={meal} />
+							{formatDateTime(log.eatenAt)}
+						</span>
 					</li>
 				{/each}
 			</ul>
