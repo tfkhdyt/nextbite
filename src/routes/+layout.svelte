@@ -26,7 +26,7 @@
 	{#if data.authenticated}
 		<header class="border-b border-[var(--border)] bg-[var(--surface)]/80 backdrop-blur">
 			<div class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-4">
-				<a href="/dashboard" class="brand text-xl text-[var(--accent)] sm:text-2xl">Food Logs</a>
+				<a href="/dashboard" class="brand text-xl text-[var(--accent)] sm:text-2xl">NextBite</a>
 				<nav class="flex w-full flex-wrap items-center gap-1 text-sm sm:w-auto sm:justify-end">
 					{#each navItems as item (item.href)}
 						<a
@@ -40,6 +40,7 @@
 					{/each}
 					<a
 						href="/logout"
+						data-sveltekit-reload
 						class="ml-0 inline-flex min-h-11 items-center rounded px-3 py-2.5 text-[var(--muted)] transition-colors hover:text-[var(--ink)] sm:ml-2"
 					>
 						Sign out

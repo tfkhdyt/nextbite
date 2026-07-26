@@ -4,10 +4,14 @@
 	let { form } = $props();
 </script>
 
+<svelte:head>
+	<title>Sign in · NextBite</title>
+</svelte:head>
+
 <div class="mx-auto max-w-sm pt-16">
 	<div class="mb-8 text-center">
-		<h1 class="brand mb-2 text-4xl text-[var(--accent)] sm:text-5xl">Food Logs</h1>
-		<p class="text-[var(--muted)]">Track what you eat, one meal at a time.</p>
+		<h1 class="brand mb-2 text-4xl text-[var(--accent)] sm:text-5xl">NextBite</h1>
+		<p class="text-[var(--muted)]">Log meals. Find what to eat next.</p>
 	</div>
 
 	<form method="POST" use:enhance class="space-y-4">

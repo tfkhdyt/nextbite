@@ -7,7 +7,7 @@
 </script>
 
 <svelte:head>
-	<title>Foods · Food Logs</title>
+	<title>Foods · NextBite</title>
 </svelte:head>
 
 <h1 class="mb-2 text-3xl sm:text-4xl">Foods</h1>

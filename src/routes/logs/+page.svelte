@@ -45,7 +45,7 @@
 </script>
 
 <svelte:head>
-	<title>Logs · Food Logs</title>
+	<title>Logs · NextBite</title>
 </svelte:head>
 
 <h1 class="mb-6 text-3xl sm:text-4xl">Logs</h1>

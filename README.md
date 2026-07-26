@@ -1,42 +1,90 @@
-# sv
+# NextBite
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Personal meal tracker for logging what you eat, browsing food history, and getting a simple “eat this next” suggestion based on least-eaten foods.
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **Logs**: add meals with food name, timestamp, and optional note (foods are upserted automatically)
+- **Foods**: list of tracked foods sorted by eat count (least first), with last-eaten time
+- **Dashboard**: totals, recent logs, meals-per-day chart, top foods, and least-eaten recommendation (after ~30 days of history)
+- **Auth**: single shared password behind an HTTP-only session cookie
 
-```sh
-# create a new project
-npx sv create my-app
-```
+## Stack
 
-To recreate this project with the same configuration:
+- [SvelteKit](https://svelte.dev/docs/kit) + [Svelte 5](https://svelte.dev)
+- [Convex](https://convex.dev) (database and realtime API)
+- [Tailwind CSS](https://tailwindcss.com) v4
+- [Cloudflare Workers](https://developers.cloudflare.com/workers/) (`@sveltejs/adapter-cloudflare`)
+- [pnpm](https://pnpm.io)
 
-```sh
-# recreate this project
-pnpm dlx sv@0.16.5 create --template minimal --types ts --add prettier eslint tailwindcss="plugins:forms" sveltekit-adapter="adapter:cloudflare+cfTarget:workers" better-auth="demo:password" mcp="ide:cursor+setup:remote" drizzle="database:sqlite+sqlite:libsql" --install pnpm food-logs
-```
+## Prerequisites
 
-## Developing
+- Node.js 20+
+- pnpm
+- A [Convex](https://convex.dev) account (for `npx convex dev`)
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
+## Setup
 
 ```sh
-npm run build
+pnpm install
+cp .env.example .env
 ```
 
-You can preview the production build with `npm run preview`.
+Fill in `.env`:
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+| Variable | Description |
+| --- | --- |
+| `ORIGIN` | App origin URL (e.g. `http://localhost:5173`) |
+| `APP_PASSWORD` | Shared login password |
+| `SESSION_SECRET` | Long random string used to sign session cookies |
+| `PUBLIC_CONVEX_URL` | Convex deployment URL (set by `convex dev` / dashboard) |
+
+Start Convex (creates/links a deployment and syncs `PUBLIC_CONVEX_URL` into `.env.local` when configured):
+
+```sh
+pnpm convex:dev
+```
+
+In another terminal, start the app:
+
+```sh
+pnpm dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) and sign in with `APP_PASSWORD`.
+
+## Scripts
+
+| Command | Description |
+| --- | --- |
+| `pnpm dev` | Vite / SvelteKit dev server |
+| `pnpm convex:dev` | Convex backend watcher |
+| `pnpm build` | Production build for Cloudflare Workers |
+| `pnpm preview` | Preview the Workers build locally |
+| `pnpm check` | Typecheck (`svelte-check` + Wrangler types) |
+| `pnpm lint` | Prettier + ESLint |
+| `pnpm format` | Format with Prettier |
+| `pnpm gen` | Generate Wrangler / Worker types |
+
+## Project layout
+
+```
+src/routes/       # SvelteKit pages (dashboard, logs, foods, login)
+src/lib/          # UI helpers, charts, session utilities
+convex/           # Schema and Convex queries/mutations
+```
+
+## Deploy
+
+1. Deploy the Convex backend: `npx convex deploy`
+2. Set production env vars (`APP_PASSWORD`, `SESSION_SECRET`, `ORIGIN`, `PUBLIC_CONVEX_URL`) on Cloudflare
+3. Build and deploy the Worker:
+
+```sh
+pnpm build
+npx wrangler deploy
+```
+
+## License
+
+Private / personal use.
