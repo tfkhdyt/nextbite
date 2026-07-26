@@ -70,6 +70,59 @@ export const remove = mutation({
 	}
 });
 
+function localDayKey(timestamp: number, timezoneOffsetMinutes: number) {
+	const localMs = timestamp - timezoneOffsetMinutes * 60 * 1000;
+	return Math.floor(localMs / DAY_MS);
+}
+
+function localDayStartUtc(dayKey: number, timezoneOffsetMinutes: number) {
+	return dayKey * DAY_MS + timezoneOffsetMinutes * 60 * 1000;
+}
+
+export const dailyCounts = query({
+	args: {
+		days: v.number(),
+		now: v.number(),
+		timezoneOffsetMinutes: v.number()
+	},
+	returns: v.array(
+		v.object({
+			dayStart: v.number(),
+			count: v.number()
+		})
+	),
+	handler: async (ctx, { days, now, timezoneOffsetMinutes }) => {
+		const todayKey = localDayKey(now, timezoneOffsetMinutes);
+		const windowStartKey = todayKey - (days - 1);
+		const windowStartUtc = localDayStartUtc(windowStartKey, timezoneOffsetMinutes);
+
+		const buckets = new Map<number, number>();
+		for (let key = windowStartKey; key <= todayKey; key++) {
+			buckets.set(key, 0);
+		}
+
+		const logs = await ctx.db
+			.query('logs')
+			.withIndex('by_eaten_at', (q) => q.gte('eatenAt', windowStartUtc))
+			.filter((q) => q.lte(q.field('eatenAt'), now))
+			.collect();
+
+		for (const log of logs) {
+			const key = localDayKey(log.eatenAt, timezoneOffsetMinutes);
+			if (buckets.has(key)) {
+				buckets.set(key, (buckets.get(key) ?? 0) + 1);
+			}
+		}
+
+		return Array.from(buckets.entries())
+			.sort(([a], [b]) => a - b)
+			.map(([key, count]) => ({
+				dayStart: localDayStartUtc(key, timezoneOffsetMinutes),
+				count
+			}));
+	}
+});
+
 export const historySummary = query({
 	args: { now: v.number() },
 	returns: v.object({

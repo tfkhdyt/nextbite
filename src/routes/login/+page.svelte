@@ -6,7 +6,7 @@
 
 <div class="mx-auto max-w-sm pt-16">
 	<div class="mb-8 text-center">
-		<h1 class="brand mb-2 text-5xl text-[var(--accent)]">Food Logs</h1>
+		<h1 class="brand mb-2 text-4xl text-[var(--accent)] sm:text-5xl">Food Logs</h1>
 		<p class="text-[var(--muted)]">Track what you eat, one meal at a time.</p>
 	</div>
 
@@ -19,7 +19,7 @@
 				type="password"
 				required
 				autocomplete="current-password"
-				class="w-full rounded-lg border-[var(--border)] bg-[var(--surface)] px-3 py-2"
+				class="w-full max-w-full min-w-0 rounded-lg border-[var(--border)] bg-[var(--surface)] px-3 py-2"
 			/>
 		</div>
 

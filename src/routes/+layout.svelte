@@ -25,13 +25,13 @@
 <div class="min-h-dvh">
 	{#if data.authenticated}
 		<header class="border-b border-[var(--border)] bg-[var(--surface)]/80 backdrop-blur">
-			<div class="mx-auto flex max-w-3xl items-center justify-between gap-4 px-4 py-4">
-				<a href="/dashboard" class="brand text-2xl text-[var(--accent)]">Food Logs</a>
-				<nav class="flex items-center gap-1 text-sm">
-					{#each navItems as item}
+			<div class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-4">
+				<a href="/dashboard" class="brand text-xl text-[var(--accent)] sm:text-2xl">Food Logs</a>
+				<nav class="flex w-full flex-wrap items-center gap-1 text-sm sm:w-auto sm:justify-end">
+					{#each navItems as item (item.href)}
 						<a
 							href={item.href}
-							class="rounded px-3 py-1.5 transition-colors {$page.url.pathname === item.href
+							class="inline-flex min-h-11 items-center rounded px-3 py-2.5 transition-colors {$page.url.pathname === item.href
 								? 'bg-[var(--accent)] text-white'
 								: 'text-[var(--muted)] hover:text-[var(--ink)]'}"
 						>
@@ -40,7 +40,7 @@
 					{/each}
 					<a
 						href="/logout"
-						class="ml-2 rounded px-3 py-1.5 text-[var(--muted)] transition-colors hover:text-[var(--ink)]"
+						class="ml-0 inline-flex min-h-11 items-center rounded px-3 py-2.5 text-[var(--muted)] transition-colors hover:text-[var(--ink)] sm:ml-2"
 					>
 						Sign out
 					</a>
@@ -49,7 +49,7 @@
 		</header>
 	{/if}
 
-	<main class="mx-auto max-w-3xl px-4 py-8">
+	<main class="mx-auto max-w-3xl px-4 py-6 sm:py-8">
 		{#if !PUBLIC_CONVEX_URL && data.authenticated}
 			<p class="mb-6 rounded border border-[var(--warn)] bg-amber-50 px-4 py-3 text-sm text-[var(--warn)]">
 				Set <code class="font-mono">PUBLIC_CONVEX_URL</code> in your <code class="font-mono">.env</code>

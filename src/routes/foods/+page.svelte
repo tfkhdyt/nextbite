@@ -10,7 +10,7 @@
 	<title>Foods · Food Logs</title>
 </svelte:head>
 
-<h1 class="mb-2 text-4xl">Foods</h1>
+<h1 class="mb-2 text-3xl sm:text-4xl">Foods</h1>
 <p class="mb-6 text-[var(--muted)]">Sorted by how often you eat them (least first).</p>
 
 {#if foods.isLoading}
@@ -18,28 +18,21 @@
 {:else if foods.error}
 	<p class="text-red-600">{foods.error.toString()}</p>
 {:else if foods.data && foods.data.length > 0}
-	<div class="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)]">
-		<table class="w-full text-left text-sm">
-			<thead class="border-b border-[var(--border)] bg-[var(--bg)]">
-				<tr>
-					<th class="px-4 py-3 font-medium text-[var(--muted)]">Food</th>
-					<th class="px-4 py-3 font-medium text-[var(--muted)]">Times eaten</th>
-					<th class="px-4 py-3 font-medium text-[var(--muted)]">Last eaten</th>
-				</tr>
-			</thead>
-			<tbody class="divide-y divide-[var(--border)]">
-				{#each foods.data as food}
-					<tr>
-						<td class="px-4 py-3 font-medium">{food.name}</td>
-						<td class="px-4 py-3">{food.eatCount}</td>
-						<td class="px-4 py-3 text-[var(--muted)]">
-							{food.lastEatenAt ? formatDateTime(food.lastEatenAt) : 'Never'}
-						</td>
-					</tr>
-				{/each}
-			</tbody>
-		</table>
-	</div>
+	<ul class="divide-y divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--surface)]">
+		{#each foods.data as food (food._id)}
+			<li class="px-4 py-3">
+				<div class="flex items-baseline justify-between gap-4">
+					<span class="font-medium">{food.name}</span>
+					<span class="shrink-0 text-sm text-[var(--muted)]">
+						{food.eatCount} {food.eatCount === 1 ? 'time' : 'times'}
+					</span>
+				</div>
+				<p class="mt-0.5 text-sm text-[var(--muted)]">
+					Last eaten {food.lastEatenAt ? formatDateTime(food.lastEatenAt) : 'never'}
+				</p>
+			</li>
+		{/each}
+	</ul>
 {:else}
 	<p class="text-[var(--muted)]">No foods yet. <a href="/logs" class="text-[var(--accent)] underline">Log a meal</a> to get started.</p>
 {/if}

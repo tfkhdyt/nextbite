@@ -48,7 +48,7 @@
 	<title>Logs · Food Logs</title>
 </svelte:head>
 
-<h1 class="mb-6 text-4xl">Logs</h1>
+<h1 class="mb-6 text-3xl sm:text-4xl">Logs</h1>
 
 <form onsubmit={addLog} class="mb-8 space-y-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
 	<div>
@@ -58,7 +58,7 @@
 			bind:value={foodName}
 			required
 			placeholder="e.g. oatmeal, chicken salad"
-			class="w-full rounded-lg border-[var(--border)] bg-white px-3 py-2"
+			class="w-full max-w-full min-w-0 rounded-lg border-[var(--border)] bg-white px-3 py-2"
 		/>
 	</div>
 	<div>
@@ -68,7 +68,7 @@
 			type="datetime-local"
 			bind:value={eatenAt}
 			required
-			class="w-full rounded-lg border-[var(--border)] bg-white px-3 py-2"
+			class="w-full max-w-full min-w-0 rounded-lg border-[var(--border)] bg-white px-3 py-2"
 		/>
 	</div>
 	<div>
@@ -77,7 +77,7 @@
 			id="note"
 			bind:value={note}
 			placeholder="homemade, restaurant, etc."
-			class="w-full rounded-lg border-[var(--border)] bg-white px-3 py-2"
+			class="w-full max-w-full min-w-0 rounded-lg border-[var(--border)] bg-white px-3 py-2"
 		/>
 	</div>
 
@@ -88,7 +88,7 @@
 	<button
 		type="submit"
 		disabled={submitting}
-		class="rounded-lg bg-[var(--accent)] px-5 py-2.5 font-medium text-white transition-colors hover:bg-[var(--accent-hover)] disabled:opacity-50"
+		class="w-full rounded-lg bg-[var(--accent)] px-5 py-3 font-medium text-white transition-colors hover:bg-[var(--accent-hover)] disabled:opacity-50 sm:w-auto"
 	>
 		{submitting ? 'Adding...' : 'Add log'}
 	</button>
@@ -102,7 +102,7 @@
 		<p class="text-red-600">{logs.error.toString()}</p>
 	{:else if logs.data && logs.data.length > 0}
 		<ul class="divide-y divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--surface)]">
-			{#each logs.data as log}
+			{#each logs.data as log (log._id)}
 				<li class="flex items-start justify-between gap-4 px-4 py-3">
 					<div>
 						<p class="font-medium">{log.foodName}</p>
@@ -114,7 +114,7 @@
 					<button
 						type="button"
 						onclick={() => removeLog(log._id)}
-						class="shrink-0 text-sm text-red-600 hover:underline"
+						class="inline-flex min-h-11 shrink-0 items-center px-2 text-sm text-red-600 hover:underline"
 					>
 						Delete
 					</button>
