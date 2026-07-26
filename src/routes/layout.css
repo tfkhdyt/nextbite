@@ -41,3 +41,9 @@ h2,
 	font-family: 'Instrument Serif', Georgia, serif;
 	font-weight: 400;
 }
+
+/* layerchart default tooltip is 90% opaque + blur; keep it solid over chart bars */
+.lc-tooltip-container[data-variant='default'] {
+	background-color: var(--surface);
+	backdrop-filter: none;
+}
