@@ -4,6 +4,10 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="text-scale" content="scale" />
+		<style>
+			/* Pin Tailwind layer order; Vite/LightningCSS drops it in prod builds */
+			@layer theme, base, components, utilities;
+		</style>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
