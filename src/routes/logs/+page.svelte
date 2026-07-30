@@ -6,7 +6,7 @@
 	import { formatDateTime, mealTypeClass, mealTypeFromEatenAt } from '$lib/format';
 
 	const client = useConvexClient();
-	const logs = usePaginatedQuery(api.logs.listPaginated, () => ({}), { initialNumItems: 20 });
+	const logs = usePaginatedQuery(api.logs.listPaginated, () => ({}), { initialNumItems: 10 });
 
 	let foodName = $state('');
 	let eatenAt = $state(toLocalInputValue(new Date()));
@@ -178,7 +178,7 @@
 		{#if logs.status === 'CanLoadMore' || logs.status === 'LoadingMore'}
 			<button
 				type="button"
-				onclick={() => logs.loadMore(20)}
+				onclick={() => logs.loadMore(10)}
 				disabled={logs.status === 'LoadingMore'}
 				class="mt-4 w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-5 py-3 font-medium text-[var(--ink)] transition-colors hover:bg-[var(--bg)] disabled:opacity-50 sm:w-auto"
 			>

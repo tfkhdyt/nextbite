@@ -42,9 +42,10 @@
 	const overlookedFoods = $derived(
 		(foods.data ?? [])
 			.flatMap((food) => {
-				if (food.lastEatenAt == null) return [];
+				// Skip one-offs: "overlooked" only means neglected among foods you actually repeat.
+				if (food.lastEatenAt == null || food.eatCount < 2) return [];
 				const daysSince = Math.floor((pageLoadedAt - food.lastEatenAt) / (1000 * 60 * 60 * 24));
-				return daysSince > 0 ? [{ name: food.name, daysSince }] : [];
+				return daysSince >= 3 ? [{ name: food.name, daysSince, eatCount: food.eatCount }] : [];
 			})
 			.sort((a, b) => b.daysSince - a.daysSince || a.name.localeCompare(b.name))
 			.slice(0, 5)
