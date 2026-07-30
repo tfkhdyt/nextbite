@@ -15,9 +15,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const { pathname } = event.url;
 	const isLoginPost = pathname === '/login' && event.request.method === 'POST';
 
-	if (isLoginPost) {
-		await enforceRateLimit(event, 'LOGIN_RATE_LIMITER');
-	} else {
+	// Login POST rate limit is enforced in the form action via fail(), so the
+	// message can render on the login form instead of the error page.
+	if (!isLoginPost) {
 		await enforceRateLimit(event, 'APP_RATE_LIMITER');
 	}
 
