@@ -77,15 +77,28 @@
 {:else if history.error}
 	<p class="text-red-600">Failed to load history: {history.error.toString()}</p>
 {:else}
-	<div class="mb-8 grid grid-cols-2 gap-4">
-		<div class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
-			<p class="text-sm text-[var(--muted)]">Total logs</p>
-			<p class="text-3xl font-semibold">{totalLogs}</p>
+	<div class="mb-8 grid gap-4 lg:grid-cols-3">
+		<div class="grid grid-cols-2 gap-4 lg:grid-cols-1">
+			<div class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
+				<h2 class="mb-4 text-xl">Total logs</h2>
+				<p class="text-3xl font-semibold">{totalLogs}</p>
+			</div>
+			<div class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
+				<h2 class="mb-4 text-xl">Foods tracked</h2>
+				<p class="text-3xl font-semibold">{distinctFoods}</p>
+			</div>
 		</div>
-		<div class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
-			<p class="text-sm text-[var(--muted)]">Foods tracked</p>
-			<p class="text-3xl font-semibold">{distinctFoods}</p>
-		</div>
+
+		<section class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 lg:col-span-2">
+			<h2 class="mb-4 text-xl">Eat time</h2>
+			{#if eatTimes.isLoading}
+				<p class="text-sm text-[var(--muted)]">Loading...</p>
+			{:else if eatTimes.error}
+				<p class="text-sm text-red-600">{eatTimes.error.toString()}</p>
+			{:else if eatTimes.data}
+				<EatTimeChart data={eatTimes.data} />
+			{/if}
+		</section>
 	</div>
 
 	<div class="mb-8 grid gap-4 sm:grid-cols-2">
@@ -100,93 +113,84 @@
 		</section>
 	</div>
 
-	<section class="mb-8 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
-		<h2 class="mb-4 text-xl">Eat time</h2>
-		{#if eatTimes.isLoading}
-			<p class="text-sm text-[var(--muted)]">Loading...</p>
-		{:else if eatTimes.error}
-			<p class="text-sm text-red-600">{eatTimes.error.toString()}</p>
-		{:else if eatTimes.data}
-			<EatTimeChart data={eatTimes.data} />
-		{/if}
-	</section>
+	<div class="mb-8 grid gap-4 lg:grid-cols-2 lg:items-start">
+		{#if hasEnoughHistory}
+			<section>
+				<button
+					type="button"
+					onclick={onRecommend}
+					disabled={recommending}
+					class="rounded-lg bg-[var(--accent)] px-5 py-2.5 font-medium text-white transition-colors hover:bg-[var(--accent-hover)] disabled:opacity-50"
+				>
+					{recommending ? 'Finding a suggestion...' : 'Recommend food'}
+				</button>
 
-	{#if hasEnoughHistory}
-		<section class="mb-8">
-			<button
-				type="button"
-				onclick={onRecommend}
-				disabled={recommending}
-				class="rounded-lg bg-[var(--accent)] px-5 py-2.5 font-medium text-white transition-colors hover:bg-[var(--accent-hover)] disabled:opacity-50"
-			>
-				{recommending ? 'Finding a suggestion...' : 'Recommend food'}
-			</button>
-
-			{#if showRecommend}
-				<div class="mt-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
-					{#if recommendError}
-						<p class="text-red-600">{recommendError}</p>
-					{:else if recommending}
-						<p class="text-[var(--muted)]">Finding a suggestion...</p>
-					{:else if recommendation}
-						<p class="text-sm text-[var(--muted)]">Based on your habits, try eating less often:</p>
-						<p class="mt-1 text-2xl">{recommendation.name}</p>
-						<p class="mt-1 text-sm text-[var(--muted)]">
-							Logged {recommendation.eatCount}
-							{recommendation.eatCount === 1 ? 'time' : 'times'}
-							{#if recommendation.lastEatenAt}
-								· last {formatRelative(recommendation.lastEatenAt)}
-							{:else}
-								· never logged yet
-							{/if}
-						</p>
+				{#if showRecommend}
+					<div class="mt-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
+						{#if recommendError}
+							<p class="text-red-600">{recommendError}</p>
+						{:else if recommending}
+							<p class="text-[var(--muted)]">Finding a suggestion...</p>
+						{:else if recommendation}
+							<p class="text-sm text-[var(--muted)]">
+								Based on your habits, try eating less often:
+							</p>
+							<p class="mt-1 text-2xl">{recommendation.name}</p>
+							<p class="mt-1 text-sm text-[var(--muted)]">
+								Logged {recommendation.eatCount}
+								{recommendation.eatCount === 1 ? 'time' : 'times'}
+								{#if recommendation.lastEatenAt}
+									· last {formatRelative(recommendation.lastEatenAt)}
+								{:else}
+									· never logged yet
+								{/if}
+							</p>
+						{:else}
+							<p class="text-[var(--muted)]">Log some meals first to get recommendations.</p>
+						{/if}
+					</div>
+				{/if}
+			</section>
+		{:else}
+			<section class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
+				<h2 class="mb-4 text-xl">Food recommendations</h2>
+				<p>
+					{#if daysOfHistory === 0}
+						Log meals for 30 days to unlock recommendations.
 					{:else}
-						<p class="text-[var(--muted)]">Log some meals first to get recommendations.</p>
+						{daysOfHistory} of 30 days logged. {daysUntilRecommend} more to unlock recommendations.
 					{/if}
-				</div>
+				</p>
+			</section>
+		{/if}
+
+		<section class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
+			<h2 class="mb-4 text-xl">Recent meals</h2>
+			{#if recentLogs.isLoading}
+				<p class="text-[var(--muted)]">Loading...</p>
+			{:else if recentLogs.error}
+				<p class="text-red-600">{recentLogs.error.toString()}</p>
+			{:else if recentLogs.data && recentLogs.data.length > 0}
+				<ul class="divide-y divide-[var(--border)]">
+					{#each recentLogs.data as log (log._id)}
+						{@const meal = mealTypeFromEatenAt(log.eatenAt)}
+						<li
+							class="flex flex-col gap-0.5 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
+						>
+							<span class="font-medium">{log.foodName}</span>
+							<span class="inline-flex items-center gap-1.5 text-sm {mealTypeClass(meal)}">
+								<MealTypeIcon type={meal} />
+								{formatDateTime(log.eatenAt)}
+							</span>
+						</li>
+					{/each}
+				</ul>
+			{:else}
+				<p class="text-[var(--muted)]">
+					No meals logged yet.
+					<a href={resolve('/logs')} class="text-[var(--accent)] underline">Add one</a>.
+				</p>
 			{/if}
 		</section>
-	{:else}
-		<section class="mb-8 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
-			<p class="text-sm text-[var(--muted)]">Food recommendations</p>
-			<p class="mt-1">
-				{#if daysOfHistory === 0}
-					Log meals for 30 days to unlock recommendations.
-				{:else}
-					{daysOfHistory} of 30 days logged. {daysUntilRecommend} more to unlock recommendations.
-				{/if}
-			</p>
-		</section>
-	{/if}
-
-	<section>
-		<h2 class="mb-3 text-2xl">Recent meals</h2>
-		{#if recentLogs.isLoading}
-			<p class="text-[var(--muted)]">Loading...</p>
-		{:else if recentLogs.error}
-			<p class="text-red-600">{recentLogs.error.toString()}</p>
-		{:else if recentLogs.data && recentLogs.data.length > 0}
-			<ul
-				class="divide-y divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--surface)]"
-			>
-				{#each recentLogs.data as log (log._id)}
-					{@const meal = mealTypeFromEatenAt(log.eatenAt)}
-					<li
-						class="flex flex-col gap-0.5 px-4 py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
-					>
-						<span class="font-medium">{log.foodName}</span>
-						<span class="inline-flex items-center gap-1.5 text-sm {mealTypeClass(meal)}">
-							<MealTypeIcon type={meal} />
-							{formatDateTime(log.eatenAt)}
-						</span>
-					</li>
-				{/each}
-			</ul>
-		{:else}
-			<p class="text-[var(--muted)]">
-				No meals logged yet.
-				<a href={resolve('/logs')} class="text-[var(--accent)] underline">Add one</a>.
-			</p>
-		{/if}
-	</section>
+	</div>
 {/if}

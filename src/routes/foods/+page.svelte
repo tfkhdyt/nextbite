@@ -5,6 +5,11 @@
 	import { formatDateTime } from '$lib/format';
 
 	const foods = useQuery(api.foods.withStats, () => ({}));
+	// ponytail: withStats reads whole foods table + all matching logs; client slice only.
+	// Ceiling: grows with every food/log. Upgrade: denormalize eatCount/lastEatenAt onto foods, index, .paginate().
+	let visibleCount = $state(24);
+	const visible = $derived((foods.data ?? []).slice(0, visibleCount));
+	const hasMore = $derived((foods.data?.length ?? 0) > visibleCount);
 </script>
 
 <svelte:head>
@@ -19,11 +24,9 @@
 {:else if foods.error}
 	<p class="text-red-600">{foods.error.toString()}</p>
 {:else if foods.data && foods.data.length > 0}
-	<ul
-		class="divide-y divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--surface)]"
-	>
-		{#each foods.data as food (food._id)}
-			<li class="px-4 py-3">
+	<ul class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+		{#each visible as food (food._id)}
+			<li class="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
 				<div class="flex items-baseline justify-between gap-4">
 					<span class="font-medium">{food.name}</span>
 					<span class="shrink-0 text-sm text-[var(--muted)]">
@@ -37,6 +40,15 @@
 			</li>
 		{/each}
 	</ul>
+	{#if hasMore}
+		<button
+			type="button"
+			onclick={() => (visibleCount += 24)}
+			class="mt-4 w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-5 py-3 font-medium text-[var(--ink)] transition-colors hover:bg-[var(--bg)] sm:w-auto"
+		>
+			Load more
+		</button>
+	{/if}
 {:else}
 	<p class="text-[var(--muted)]">
 		No foods yet.

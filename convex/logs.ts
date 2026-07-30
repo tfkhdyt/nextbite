@@ -1,3 +1,4 @@
+import { paginationOptsValidator } from 'convex/server';
 import { query, mutation, type MutationCtx } from './_generated/server';
 import { v } from 'convex/values';
 
@@ -44,6 +45,33 @@ export const list = query({
 				};
 			})
 		);
+	}
+});
+
+export const listPaginated = query({
+	args: { paginationOpts: paginationOptsValidator },
+	handler: async (ctx, { paginationOpts }) => {
+		const result = await ctx.db
+			.query('logs')
+			.withIndex('by_eaten_at')
+			.order('desc')
+			.paginate(paginationOpts);
+
+		return {
+			...result,
+			page: await Promise.all(
+				result.page.map(async (log) => {
+					const food = await ctx.db.get(log.foodId);
+					return {
+						_id: log._id,
+						eatenAt: log.eatenAt,
+						note: log.note,
+						foodId: log.foodId,
+						foodName: food?.name ?? 'Unknown'
+					};
+				})
+			)
+		};
 	}
 });
 

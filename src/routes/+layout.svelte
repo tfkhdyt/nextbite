@@ -27,7 +27,7 @@
 	{#if data.authenticated}
 		<header class="border-b border-[var(--border)] bg-[var(--surface)]/80 backdrop-blur">
 			<div
-				class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-4"
+				class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-4"
 			>
 				<a href={resolve('/dashboard')} class="brand text-xl text-[var(--accent)] sm:text-2xl"
 					>NextBite</a
@@ -56,7 +56,7 @@
 		</header>
 	{/if}
 
-	<main class="mx-auto max-w-3xl px-4 py-6 sm:py-8">
+	<main class="mx-auto max-w-6xl px-4 py-6 sm:py-8">
 		{#if !PUBLIC_CONVEX_URL && data.authenticated}
 			<p
 				class="mb-6 rounded border border-[var(--warn)] bg-amber-50 px-4 py-3 text-sm text-[var(--warn)]"
