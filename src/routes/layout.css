@@ -7,13 +7,18 @@
 	--surface: #ffffff;
 	--ink: #1a2e24;
 	--muted: #5c6f64;
-	--accent: #2d6a4f;
-	--accent-hover: #1b4332;
+	--green-1: #47a077;
+	--green-2: #3a8262;
+	--green-3: #2d6a4f;
+	--green-4: #24543f;
+	--green-5: #1b4332;
+	--accent: var(--green-3);
+	--accent-hover: var(--green-5);
 	--border: #d8e3dc;
 	--warn: #bc6c25;
-	--meal-breakfast: #b7791f;
-	--meal-lunch: #2d6a4f;
-	--meal-dinner: #2c5282;
+	--meal-breakfast: var(--green-2);
+	--meal-lunch: var(--green-3);
+	--meal-dinner: var(--green-5);
 }
 
 .meal-breakfast {

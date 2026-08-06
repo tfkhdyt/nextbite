@@ -7,6 +7,13 @@
 
 	const hasFoods = $derived(foods.length > 0);
 	const height = $derived(Math.max(foods.length, 1) * 32);
+	const rankColors = [
+		'var(--green-5)',
+		'var(--green-4)',
+		'var(--green-3)',
+		'var(--green-2)',
+		'var(--green-1)'
+	];
 </script>
 
 {#if !hasFoods}
@@ -17,6 +24,9 @@
 			data={foods}
 			x="eatCount"
 			y="name"
+			c="name"
+			cDomain={foods.map((f) => f.name)}
+			cRange={rankColors}
 			xDomain={[0, null]}
 			orientation="horizontal"
 			axis="y"
@@ -29,17 +39,10 @@
 				offset: 6,
 				class: 'fill-[var(--muted)] text-[10px]'
 			}}
-			series={[
-				{
-					key: 'eatCount',
-					value: 'eatCount',
-					color: 'var(--accent)',
-					props: { radius: 3, rounded: 'edge', strokeWidth: 0, fillOpacity: 0.85 }
-				}
-			]}
 			padding={defaultChartPadding({ axis: 'y', left: 112, right: 40, top: 4, bottom: 4 })}
 			{height}
 			props={{
+				bars: { radius: 3, rounded: 'edge', strokeWidth: 0 },
 				yAxis: {
 					tickLength: 0,
 					tickMarks: false,
