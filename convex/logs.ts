@@ -1,6 +1,7 @@
 import { paginationOptsValidator } from 'convex/server';
-import { query, mutation, type MutationCtx } from './_generated/server';
+import { query, mutation, internalMutation, type MutationCtx } from './_generated/server';
 import { v } from 'convex/values';
+import type { Id } from './_generated/dataModel';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const MIN_DAYS_FOR_RECOMMEND = 30;
@@ -26,6 +27,16 @@ async function upsertFood(ctx: MutationCtx, name: string) {
 		normalizedName,
 		createdAt: Date.now()
 	});
+}
+
+async function deleteFoodIfUnused(ctx: MutationCtx, foodId: Id<'foods'>) {
+	const remaining = await ctx.db
+		.query('logs')
+		.withIndex('by_food_id', (q) => q.eq('foodId', foodId))
+		.first();
+	if (remaining) return false;
+	await ctx.db.delete(foodId);
+	return true;
 }
 
 export const list = query({
@@ -89,8 +100,26 @@ export const add = mutation({
 
 export const remove = mutation({
 	args: { id: v.id('logs') },
+	returns: v.null(),
 	handler: async (ctx, { id }) => {
+		const log = await ctx.db.get(id);
+		if (!log) return null;
 		await ctx.db.delete(id);
+		await deleteFoodIfUnused(ctx, log.foodId);
+		return null;
+	}
+});
+
+export const cleanupOrphanFoods = internalMutation({
+	args: {},
+	returns: v.number(),
+	handler: async (ctx) => {
+		const foods = await ctx.db.query('foods').collect();
+		let deleted = 0;
+		for (const food of foods) {
+			if (await deleteFoodIfUnused(ctx, food._id)) deleted += 1;
+		}
+		return deleted;
 	}
 });
 

@@ -17,18 +17,18 @@
 </svelte:head>
 
 <h1 class="mb-2 text-3xl sm:text-4xl">Foods</h1>
-<p class="mb-6 text-[var(--muted)]">Sorted by how often you eat them (least first).</p>
+<p class="mb-5 text-[var(--muted)] sm:mb-6">Sorted by how often you eat them (least first).</p>
 
 {#if foods.isLoading}
-	<p class="text-[var(--muted)]">Loading...</p>
+	<p class="text-[var(--muted)]">Loading foods.</p>
 {:else if foods.error}
-	<p class="text-red-600">{foods.error.toString()}</p>
+	<p class="text-[var(--danger)]">{foods.error.toString()}</p>
 {:else if foods.data && foods.data.length > 0}
-	<ul class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+	<ul class="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-3">
 		{#each visible as food (food._id)}
-			<li class="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
-				<div class="flex items-baseline justify-between gap-4">
-					<span class="font-medium">{food.name}</span>
+			<li class="min-w-0 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3">
+				<div class="flex items-baseline justify-between gap-3">
+					<span class="min-w-0 font-medium wrap-break-word">{food.name}</span>
 					<span class="shrink-0 text-sm text-[var(--muted)]">
 						{food.eatCount}
 						{food.eatCount === 1 ? 'time' : 'times'}
@@ -44,7 +44,7 @@
 		<button
 			type="button"
 			onclick={() => (visibleCount += 24)}
-			class="mt-4 w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-5 py-3 font-medium text-[var(--ink)] transition-colors hover:bg-[var(--bg)] sm:w-auto"
+			class="mt-4 min-h-11 w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-5 py-3 font-medium text-[var(--ink)] transition-colors hover:bg-[var(--bg)] sm:w-auto"
 		>
 			Load more
 		</button>

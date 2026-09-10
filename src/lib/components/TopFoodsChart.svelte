@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { BarChart, Tooltip, defaultChartPadding } from 'layerchart';
+	import { innerWidth } from 'svelte/reactivity/window';
 
 	type FoodStat = { name: string; eatCount: number };
 
@@ -7,6 +8,9 @@
 
 	const hasFoods = $derived(foods.length > 0);
 	const height = $derived(Math.max(foods.length, 1) * 32);
+	const narrow = $derived((innerWidth.current ?? 0) < 640);
+	const axisLeft = $derived(narrow ? 72 : 112);
+	const nameChars = $derived(narrow ? 10 : 14);
 	const rankColors = [
 		'var(--green-5)',
 		'var(--green-4)',
@@ -19,7 +23,7 @@
 {#if !hasFoods}
 	<p class="text-sm text-[var(--muted)]">Log meals to see rankings.</p>
 {:else}
-	<div role="img" aria-label="Top foods by eat count">
+	<div class="min-w-0" role="img" aria-label="Top foods by eat count">
 		<BarChart
 			data={foods}
 			x="eatCount"
@@ -39,7 +43,7 @@
 				offset: 6,
 				class: 'fill-[var(--muted)] text-[10px]'
 			}}
-			padding={defaultChartPadding({ axis: 'y', left: 112, right: 40, top: 4, bottom: 4 })}
+			padding={defaultChartPadding({ axis: 'y', left: axisLeft, right: 40, top: 4, bottom: 4 })}
 			{height}
 			props={{
 				bars: { radius: 3, rounded: 'edge', strokeWidth: 0 },
@@ -50,7 +54,7 @@
 					tickLabelProps: {
 						textAnchor: 'end',
 						dx: -8,
-						truncate: { maxChars: 14, ellipsis: '…' },
+						truncate: { maxChars: nameChars, ellipsis: '…' },
 						class: 'fill-[var(--ink)] text-[11px]'
 					}
 				},

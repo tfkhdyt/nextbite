@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { BarChart, Tooltip, defaultChartPadding } from 'layerchart';
+	import { innerWidth } from 'svelte/reactivity/window';
 
 	type OverlookedFood = { name: string; daysSince: number; eatCount: number };
 
@@ -18,6 +19,10 @@
 	function daysLabel(value: number) {
 		return `${Math.round(value)}d`;
 	}
+
+	const narrow = $derived((innerWidth.current ?? 0) < 640);
+	const axisLeft = $derived(narrow ? 72 : 112);
+	const nameChars = $derived(narrow ? 10 : 14);
 </script>
 
 {#if !hasFoods}
@@ -25,7 +30,7 @@
 		No neglected repeats yet. Needs foods logged 2+ times, last eaten 3+ days ago.
 	</p>
 {:else}
-	<div role="img" aria-label="Repeat foods longest since last eaten">
+	<div class="min-w-0" role="img" aria-label="Repeat foods longest since last eaten">
 		<BarChart
 			data={foods}
 			x="daysSince"
@@ -45,7 +50,7 @@
 				offset: 6,
 				class: 'fill-[var(--muted)] text-[10px]'
 			}}
-			padding={defaultChartPadding({ axis: 'y', left: 112, right: 40, top: 4, bottom: 4 })}
+			padding={defaultChartPadding({ axis: 'y', left: axisLeft, right: 40, top: 4, bottom: 4 })}
 			{height}
 			props={{
 				bars: { radius: 3, rounded: 'edge', strokeWidth: 0 },
@@ -56,7 +61,7 @@
 					tickLabelProps: {
 						textAnchor: 'end',
 						dx: -8,
-						truncate: { maxChars: 14, ellipsis: '…' },
+						truncate: { maxChars: nameChars, ellipsis: '…' },
 						class: 'fill-[var(--ink)] text-[11px]'
 					}
 				},

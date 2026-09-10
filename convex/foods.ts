@@ -60,23 +60,35 @@ export const withStats = query({
 	}
 });
 
+const recommendationValidator = v.object({
+	_id: v.id('foods'),
+	name: v.string(),
+	eatCount: v.number(),
+	lastEatenAt: v.union(v.number(), v.null())
+});
+
 export const recommendLeastEaten = query({
 	args: {},
+	returns: v.union(recommendationValidator, v.null()),
 	handler: async (ctx) => {
 		const stats = await ctx.db.query('foods').collect();
 		if (stats.length === 0) return null;
 
-		const withCounts = await Promise.all(
-			stats.map(async (food) => {
-				const logs = await ctx.db
-					.query('logs')
-					.withIndex('by_food_id', (q) => q.eq('foodId', food._id))
-					.collect();
-				const eatCount = logs.length;
-				const lastEatenAt = eatCount > 0 ? Math.max(...logs.map((log) => log.eatenAt)) : null;
-				return { food, eatCount, lastEatenAt };
-			})
-		);
+		const withCounts = (
+			await Promise.all(
+				stats.map(async (food) => {
+					const logs = await ctx.db
+						.query('logs')
+						.withIndex('by_food_id', (q) => q.eq('foodId', food._id))
+						.collect();
+					const eatCount = logs.length;
+					const lastEatenAt = eatCount > 0 ? Math.max(...logs.map((log) => log.eatenAt)) : null;
+					return { food, eatCount, lastEatenAt };
+				})
+			)
+		).filter((row) => row.eatCount > 0);
+
+		if (withCounts.length === 0) return null;
 
 		withCounts.sort((a, b) => {
 			if (a.eatCount !== b.eatCount) return a.eatCount - b.eatCount;
@@ -87,6 +99,7 @@ export const recommendLeastEaten = query({
 		});
 
 		const pick = withCounts[0];
+		if (!pick) return null;
 		return {
 			_id: pick.food._id,
 			name: pick.food.name,

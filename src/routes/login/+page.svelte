@@ -8,9 +8,9 @@
 	<title>Sign in · NextBite</title>
 </svelte:head>
 
-<div class="mx-auto max-w-sm pt-16">
-	<div class="mb-8 text-center">
-		<h1 class="brand mb-2 text-4xl text-[var(--accent)] sm:text-5xl">NextBite</h1>
+<div class="mx-auto max-w-sm pt-4 sm:pt-16">
+	<div class="mb-6 sm:mb-8">
+		<h1 class="mb-2 text-3xl sm:text-4xl">Sign in</h1>
 		<p class="text-[var(--muted)]">Log meals. Find what to eat next.</p>
 	</div>
 
@@ -25,17 +25,17 @@
 				type="password"
 				required
 				autocomplete="current-password"
-				class="w-full max-w-full min-w-0 rounded-lg border-[var(--border)] bg-[var(--surface)] px-3 py-2"
+				class="min-h-11 w-full max-w-full min-w-0 rounded-lg border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-base"
 			/>
 		</div>
 
 		{#if form?.error}
-			<p class="text-sm text-red-600">{form.error}</p>
+			<p class="text-sm text-[var(--danger)]">{form.error}</p>
 		{/if}
 
 		<button
 			type="submit"
-			class="w-full rounded-lg bg-[var(--accent)] px-4 py-2.5 font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
+			class="min-h-11 w-full rounded-lg bg-[var(--btn)] px-4 py-2.5 font-medium text-[var(--btn-fg)] transition-colors hover:bg-[var(--btn-hover)]"
 		>
 			Sign in
 		</button>

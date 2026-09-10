@@ -3,6 +3,7 @@
 @plugin '@tailwindcss/forms';
 
 :root {
+	color-scheme: light;
 	--bg: #f4f7f5;
 	--surface: #ffffff;
 	--ink: #1a2e24;
@@ -14,11 +15,41 @@
 	--green-5: #1b4332;
 	--accent: var(--green-3);
 	--accent-hover: var(--green-5);
+	--btn: var(--green-3);
+	--btn-hover: var(--green-5);
+	--btn-fg: #ffffff;
 	--border: #d8e3dc;
-	--warn: #bc6c25;
+	--warn: #8a4b12;
+	--warn-bg: #f4e8d8;
+	--danger: #b42318;
 	--meal-breakfast: var(--green-2);
 	--meal-lunch: var(--green-3);
 	--meal-dinner: var(--green-5);
+}
+
+html.dark {
+	color-scheme: dark;
+	--bg: #141c18;
+	--surface: #1c2621;
+	--ink: #e4eee8;
+	--muted: #a8bdb1;
+	--green-1: #9ed4b8;
+	--green-2: #7ecfa6;
+	--green-3: #6bb892;
+	--green-4: #47a077;
+	--green-5: #3a8262;
+	--accent: #6bb892;
+	--accent-hover: #7ecfa6;
+	--btn: #2d6a4f;
+	--btn-hover: #24543f;
+	--btn-fg: #ffffff;
+	--border: #2f3f37;
+	--warn: #e8b07a;
+	--warn-bg: #2a2218;
+	--danger: #f0a8a0;
+	--meal-breakfast: #6bb892;
+	--meal-lunch: #47a077;
+	--meal-dinner: #c5d4cb;
 }
 
 .meal-breakfast {
@@ -35,7 +66,8 @@
 
 body {
 	font-family: 'DM Sans', system-ui, sans-serif;
-	background: radial-gradient(ellipse at top, #e8f3ec 0%, var(--bg) 55%);
+	/* Flat paper. A top glow would be decoration, not a notebook page. */
+	background: var(--bg);
 	color: var(--ink);
 	min-height: 100dvh;
 }
@@ -47,8 +79,14 @@ h2,
 	font-weight: 400;
 }
 
+:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+
 /* layerchart default tooltip is 90% opaque + blur; keep it solid over chart bars */
 .lc-tooltip-container[data-variant='default'] {
 	background-color: var(--surface);
+	color: var(--ink);
 	backdrop-filter: none;
 }

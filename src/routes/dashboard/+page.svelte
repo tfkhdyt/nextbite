@@ -69,67 +69,73 @@
 	<title>Dashboard · NextBite</title>
 </svelte:head>
 
-<h1 class="mb-6 text-3xl sm:text-4xl">Dashboard</h1>
+<h1 class="mb-5 text-3xl sm:mb-6 sm:text-4xl">Dashboard</h1>
 
 {#if foods.isLoading || history.isLoading}
-	<p class="text-[var(--muted)]">Loading...</p>
+	<p class="text-[var(--muted)]">Loading foods and history.</p>
 {:else if foods.error}
-	<p class="text-red-600">Failed to load: {foods.error.toString()}</p>
+	<p class="text-[var(--danger)]">Failed to load: {foods.error.toString()}</p>
 {:else if history.error}
-	<p class="text-red-600">Failed to load history: {history.error.toString()}</p>
+	<p class="text-[var(--danger)]">Failed to load history: {history.error.toString()}</p>
 {:else}
-	<div class="mb-8 grid gap-4 lg:grid-cols-3">
-		<div class="grid grid-cols-2 gap-4 lg:grid-cols-1">
-			<div class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
-				<h2 class="mb-4 text-xl">Total logs</h2>
-				<p class="text-3xl font-semibold">{totalLogs}</p>
+	<div class="mb-6 grid min-w-0 gap-4 sm:mb-8 lg:grid-cols-3">
+		<div class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-1">
+			<div class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5">
+				<h2 class="mb-3 text-lg sm:mb-4 sm:text-xl">Total logs</h2>
+				<p class="text-2xl font-semibold sm:text-3xl">{totalLogs}</p>
 			</div>
-			<div class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
-				<h2 class="mb-4 text-xl">Foods tracked</h2>
-				<p class="text-3xl font-semibold">{distinctFoods}</p>
+			<div class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5">
+				<h2 class="mb-3 text-lg sm:mb-4 sm:text-xl">Foods tracked</h2>
+				<p class="text-2xl font-semibold sm:text-3xl">{distinctFoods}</p>
 			</div>
 		</div>
 
-		<section class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 lg:col-span-2">
-			<h2 class="mb-4 text-xl">Eat time</h2>
+		<section
+			class="min-w-0 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5 lg:col-span-2"
+		>
+			<h2 class="mb-3 text-lg sm:mb-4 sm:text-xl">Eat time</h2>
 			{#if eatTimes.isLoading}
-				<p class="text-sm text-[var(--muted)]">Loading...</p>
+				<p class="text-sm text-[var(--muted)]">Loading eat times.</p>
 			{:else if eatTimes.error}
-				<p class="text-sm text-red-600">{eatTimes.error.toString()}</p>
+				<p class="text-sm text-[var(--danger)]">{eatTimes.error.toString()}</p>
 			{:else if eatTimes.data}
 				<EatTimeChart data={eatTimes.data} />
 			{/if}
 		</section>
 	</div>
 
-	<div class="mb-8 grid gap-4 sm:grid-cols-2">
-		<section class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
-			<h2 class="mb-4 text-xl">Overlooked foods</h2>
+	<div class="mb-6 grid min-w-0 gap-4 sm:mb-8 lg:grid-cols-2">
+		<section
+			class="min-w-0 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5"
+		>
+			<h2 class="mb-3 text-lg sm:mb-4 sm:text-xl">Overlooked foods</h2>
 			<OverlookedFoodsChart foods={overlookedFoods} />
 		</section>
 
-		<section class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
-			<h2 class="mb-4 text-xl">Most eaten foods</h2>
+		<section
+			class="min-w-0 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5"
+		>
+			<h2 class="mb-3 text-lg sm:mb-4 sm:text-xl">Most eaten foods</h2>
 			<TopFoodsChart foods={topFoods} />
 		</section>
 	</div>
 
-	<div class="mb-8 grid gap-4 lg:grid-cols-2 lg:items-start">
+	<div class="mb-6 grid min-w-0 gap-4 sm:mb-8 lg:grid-cols-2 lg:items-start">
 		{#if hasEnoughHistory}
 			<section>
 				<button
 					type="button"
 					onclick={onRecommend}
 					disabled={recommending}
-					class="rounded-lg bg-[var(--accent)] px-5 py-2.5 font-medium text-white transition-colors hover:bg-[var(--accent-hover)] disabled:opacity-50"
+					class="min-h-11 rounded-lg bg-[var(--btn)] px-5 py-2.5 font-medium text-[var(--btn-fg)] transition-colors hover:bg-[var(--btn-hover)] disabled:opacity-50"
 				>
 					{recommending ? 'Finding a suggestion...' : 'Recommend food'}
 				</button>
 
 				{#if showRecommend}
-					<div class="mt-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
+					<div class="mt-4 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5">
 						{#if recommendError}
-							<p class="text-red-600">{recommendError}</p>
+							<p class="text-[var(--danger)]">{recommendError}</p>
 						{:else if recommending}
 							<p class="text-[var(--muted)]">Finding a suggestion...</p>
 						{:else if recommendation}
@@ -153,8 +159,8 @@
 				{/if}
 			</section>
 		{:else}
-			<section class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
-				<h2 class="mb-4 text-xl">Food recommendations</h2>
+			<section class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5">
+				<h2 class="mb-3 text-lg sm:mb-4 sm:text-xl">Food recommendations</h2>
 				<p>
 					{#if daysOfHistory === 0}
 						Log meals for 30 days to unlock recommendations.
@@ -165,12 +171,14 @@
 			</section>
 		{/if}
 
-		<section class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5">
-			<h2 class="mb-4 text-xl">Recent meals</h2>
+		<section
+			class="min-w-0 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5"
+		>
+			<h2 class="mb-3 text-lg sm:mb-4 sm:text-xl">Recent meals</h2>
 			{#if recentLogs.isLoading}
-				<p class="text-[var(--muted)]">Loading...</p>
+				<p class="text-[var(--muted)]">Loading recent meals.</p>
 			{:else if recentLogs.error}
-				<p class="text-red-600">{recentLogs.error.toString()}</p>
+				<p class="text-[var(--danger)]">{recentLogs.error.toString()}</p>
 			{:else if recentLogs.data && recentLogs.data.length > 0}
 				<ul class="divide-y divide-[var(--border)]">
 					{#each recentLogs.data as log (log._id)}
@@ -178,7 +186,7 @@
 						<li
 							class="flex flex-col gap-0.5 py-3 first:pt-0 last:pb-0 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
 						>
-							<span class="font-medium">{log.foodName}</span>
+							<span class="min-w-0 font-medium wrap-break-word">{log.foodName}</span>
 							<span class="inline-flex items-center gap-1.5 text-sm {mealTypeClass(meal)}">
 								<MealTypeIcon type={meal} />
 								{formatDateTime(log.eatenAt)}

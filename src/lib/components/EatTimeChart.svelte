@@ -44,7 +44,7 @@
 {#if !hasMeals}
 	<p class="text-sm text-[var(--muted)]">Log meals to see when you eat.</p>
 {:else}
-	<div role="img" aria-label="Distribution of meals by hour of day">
+	<div class="min-w-0" role="img" aria-label="Distribution of meals by hour of day">
 		<BarChart
 			data={chartData}
 			x="hour"
